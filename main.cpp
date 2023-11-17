@@ -3,25 +3,27 @@
 #include <pthread.h>
 #include <vector>
 #include <cstdlib>
+#include <chrono>
+
 using namespace std;
 
 /*
  * Multiplying two square matrices either sequentially or parallel
  */
-#define MATRIX_SIZE 500
+#define MATRIX_SIZE 1000
 #define USE_PARALLEL true
 #define BOTH true
 
 vector<vector<double>>
-    finalMatrix(MATRIX_SIZE, vector<double>(MATRIX_SIZE)),
-    matrix1(MATRIX_SIZE, vector<double>(MATRIX_SIZE)),
-    matrix2(MATRIX_SIZE, vector<double>(MATRIX_SIZE));
+        finalMatrix(MATRIX_SIZE, vector<double>(MATRIX_SIZE)),
+        matrix1(MATRIX_SIZE, vector<double>(MATRIX_SIZE)),
+        matrix2(MATRIX_SIZE, vector<double>(MATRIX_SIZE));
 
 int generateRandomNumber(int min, int max) {
     return rand() % (max - min + 1) + min;
 }
 
-void fillMatrixWithRandomNumbers(std::vector<std::vector<double>>& matrix) {
+void fillMatrixWithRandomNumbers(std::vector<std::vector<double>> &matrix) {
     for (int i = 0; i < MATRIX_SIZE; i++) {
         for (int j = 0; j < MATRIX_SIZE; j++) {
             matrix[i][j] = generateRandomNumber(0, 10);
@@ -29,16 +31,16 @@ void fillMatrixWithRandomNumbers(std::vector<std::vector<double>>& matrix) {
     }
 }
 
-void printMatrix(const std::vector<std::vector<double>>& matrix) {
-    for (auto& row : matrix) {
-        for (double value : row) {
+void printMatrix(const std::vector<std::vector<double>> &matrix) {
+    for (auto &row: matrix) {
+        for (double value: row) {
             cout << value << " ";
         }
         cout << endl;
     }
 }
 
-double multiplyTwoRows(const vector<double>& hor, const vector<double>& ver) {
+double multiplyTwoRows(const vector<double> &hor, const vector<double> &ver) {
     double final = 0;
     for (int i = 0; i < MATRIX_SIZE; i++) {
         final += hor[i] * ver[i];
@@ -46,7 +48,7 @@ double multiplyTwoRows(const vector<double>& hor, const vector<double>& ver) {
     return final;
 }
 
-vector<double> getColumn(int columnIndex, const vector<vector<double>>& matrix) {
+vector<double> getColumn(int columnIndex, const vector<vector<double>> &matrix) {
     vector<double> final(MATRIX_SIZE);
     for (int i = 0; i < MATRIX_SIZE; i++) {
         final[i] = matrix[i][columnIndex];
@@ -54,7 +56,7 @@ vector<double> getColumn(int columnIndex, const vector<vector<double>>& matrix) 
     return final;
 }
 
-void* thread_ColumnCalculation(void* args) {
+void *thread_ColumnCalculation(void *args) {
     long columnIndex = (long) args;
     vector<double> columnVector = getColumn(columnIndex, matrix2);
     for (int i = 0; i < MATRIX_SIZE; i++) {
@@ -63,7 +65,7 @@ void* thread_ColumnCalculation(void* args) {
 }
 
 
-int main (int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     srand(static_cast<unsigned int>(time(0)));
     fillMatrixWithRandomNumbers(matrix1);
     fillMatrixWithRandomNumbers(matrix2);
@@ -99,10 +101,10 @@ int main (int argc, char* argv[]) {
         pthread_t columnThreads[MATRIX_SIZE];
         auto start = chrono::high_resolution_clock::now();
         for (long columnIndex = 0; columnIndex < MATRIX_SIZE; columnIndex++) {
-            pthread_create(&columnThreads[columnIndex], NULL, thread_ColumnCalculation, (void*) columnIndex);
+            pthread_create(&columnThreads[columnIndex], nullptr, thread_ColumnCalculation, (void *) columnIndex);
         }
-        for (int finalIndex = 0; finalIndex < MATRIX_SIZE; finalIndex++) {
-            pthread_join(columnThreads[finalIndex], NULL);
+        for (unsigned long columnThread: columnThreads) {
+            pthread_join(columnThread, nullptr);
         }
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
