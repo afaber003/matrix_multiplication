@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
         }
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-        cout << "Time taken by sequential implementation: " << duration.count() << " microseconds" << endl;
+        cout << "Time taken by sequential implementation: " << duration.count() / 1000.0l << " milliseconds" << endl;
     }
 
     /*********************************************/
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         }
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-        cout << "Time taken by threaded implementation: " << duration.count() / 1000.0l << " miliseconds" << endl;
+        cout << "Time taken by threaded implementation: " << duration.count() / 1000.0l << " milliseconds" << endl;
     }
 
     /*********************************************/
