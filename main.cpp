@@ -10,7 +10,7 @@ using namespace std;
 /*
  * Multiplying two square matrices either sequentially or parallel
  */
-#define MATRIX_SIZE 1000
+#define MATRIX_SIZE 75
 #define USE_PARALLEL true
 #define BOTH true
 
@@ -103,8 +103,8 @@ int main(int argc, char *argv[]) {
         for (long columnIndex = 0; columnIndex < MATRIX_SIZE; columnIndex++) {
             pthread_create(&columnThreads[columnIndex], nullptr, thread_ColumnCalculation, (void *) columnIndex);
         }
-        for (unsigned long columnThread: columnThreads) {
-            pthread_join(columnThread, nullptr);
+        for (int i = 0; i < MATRIX_SIZE; i++) {
+            pthread_join(columnThreads[i], nullptr);
         }
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
