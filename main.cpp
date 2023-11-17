@@ -10,7 +10,7 @@ using namespace std;
 /*
  * Multiplying two square matrices either sequentially or parallel
  */
-#define MATRIX_SIZE 75
+#define MATRIX_SIZE 1000
 #define USE_PARALLEL true
 #define BOTH true
 
@@ -23,7 +23,7 @@ int generateRandomNumber(int min, int max) {
     return rand() % (max - min + 1) + min;
 }
 
-void fillMatrixWithRandomNumbers(std::vector<std::vector<double>> &matrix) {
+void fillMatrixWithRandomNumbers(vector<vector<double>> &matrix) {
     for (int i = 0; i < MATRIX_SIZE; i++) {
         for (int j = 0; j < MATRIX_SIZE; j++) {
             matrix[i][j] = generateRandomNumber(0, 10);
@@ -31,7 +31,7 @@ void fillMatrixWithRandomNumbers(std::vector<std::vector<double>> &matrix) {
     }
 }
 
-void printMatrix(const std::vector<std::vector<double>> &matrix) {
+void printMatrix(const vector<vector<double>> &matrix) {
     for (auto &row: matrix) {
         for (double value: row) {
             cout << value << " ";
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         }
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
-        cout << "Time taken by threaded implementation: " << duration.count() << " microseconds" << endl;
+        cout << "Time taken by threaded implementation: " << duration.count() / 1000.0l << " miliseconds" << endl;
     }
 
     /*********************************************/
