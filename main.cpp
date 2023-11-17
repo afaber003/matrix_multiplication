@@ -8,11 +8,15 @@
 using namespace std;
 
 /*
- * Multiplying two square matrices either sequentially or parallel
+ * Multiplying two square matrices sequentially and/or in parallel
+ *
+ * USE_PARALLEL: will only run parallel version of code, if USE_PARALLEL is false: will only run sequential
+ * USE_BOTH: Will run both versions regardless of USE_PARALLEL; if false, will default to USE_PARALLEL settings
+ * MATRIX_SIZE: the length of one side of the square matrix, ie: MATRIX_SIZE 1000 => 1000x1000 matrices are created and calculated
  */
 #define MATRIX_SIZE 1000
 #define USE_PARALLEL true
-#define BOTH true
+#define USE_BOTH true
 
 vector<vector<double>>
         finalMatrix(MATRIX_SIZE, vector<double>(MATRIX_SIZE)),
@@ -78,7 +82,7 @@ int main(int argc, char *argv[]) {
 
     /**********SEQUENTIAL IMPLEMENTATION**********/
 
-    if (!USE_PARALLEL || BOTH) {
+    if (!USE_PARALLEL || USE_BOTH) {
         auto start = chrono::high_resolution_clock::now();
         vector<double> columnVector;
         for (int columnIndex = 0; columnIndex < MATRIX_SIZE; columnIndex++) {
@@ -97,7 +101,7 @@ int main(int argc, char *argv[]) {
 
     /**********PARALLEL IMPLEMENTATION************/
 
-    if (USE_PARALLEL || BOTH) {
+    if (USE_PARALLEL || USE_BOTH) {
         pthread_t columnThreads[MATRIX_SIZE];
         auto start = chrono::high_resolution_clock::now();
         for (long columnIndex = 0; columnIndex < MATRIX_SIZE; columnIndex++) {
