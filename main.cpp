@@ -103,8 +103,8 @@ int main(int argc, char *argv[]) {
         for (long columnIndex = 0; columnIndex < MATRIX_SIZE; columnIndex++) {
             pthread_create(&columnThreads[columnIndex], nullptr, thread_ColumnCalculation, (void *) columnIndex);
         }
-        for (int i = 0; i < MATRIX_SIZE; i++) {
-            pthread_join(columnThreads[i], nullptr);
+        for (auto& columnThread : columnThreads) {
+            pthread_join(columnThread, nullptr);
         }
         auto end = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
